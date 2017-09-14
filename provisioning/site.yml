@@ -15,7 +15,7 @@
 
   roles:
     - apache
-    - "{{ DBTYPE }}"
+    - "{{ dbtype }}"
     # - hhvm
     - php
     - git

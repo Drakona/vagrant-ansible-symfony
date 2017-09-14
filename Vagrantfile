@@ -3,11 +3,11 @@
 
 ## Define some app-specific stuff to be used later during provisioning: ##
 app_vars = {
-  # APPNAME: 'MyApplication',
-  DBNAME: 'symfony',
-  DBUSER: 'vagrant',
-  DBPASSWORD: 'vagrant',
-  DBTYPE: 'postgresql' # 'mysql' or 'postgresql'
+  appname: 'MyApplication',
+  dbname: 'symfony',
+  dbuser: 'vagrant',
+  dbpassword: 'vagrant',
+  dbtype: 'postgresql' # 'mysql' or 'postgresql'
 }
 # ansible_verbosity = 'vvvv'
 ##########################################################################
@@ -20,7 +20,8 @@ def host_box_is_unixy?
 end
 
 Vagrant.configure(2) do |config|
-  config.vm.box = "ubuntu/trusty64"
+  config.vm.box           = "ubuntu/trusty64"
+  config.vm.hostname      = app_vars[:appname] + '.dev'
 
   verbosity_arg = if defined? ansible_verbosity then ansible_verbosity else '' end
   if host_box_is_unixy?
@@ -50,5 +51,12 @@ END
   end
 
   config.vm.network "forwarded_port", guest: 80, host: 8080
+
+  # Plugins - Landrush
+  if Vagrant.has_plugin?('landrush')
+    config.landrush.enabled            = true
+    config.landrush.tld                = config.vm.hostname
+    config.landrush.guest_redirect_dns = false
+  end
 
 end

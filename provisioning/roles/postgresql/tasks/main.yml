@@ -4,11 +4,11 @@
 
 - name: PostgreSQL database user
   sudo_user: postgres
-  postgresql_user: name={{ DBUSER }} password={{ DBPASSWORD }}
+  postgresql_user: name={{ dbuser }} password={{ dbpassword }}
 
 - name: PostgreSQL database init
   sudo_user: postgres
-  postgresql_db: name={{ DBNAME }} owner={{ DBUSER }}
+  postgresql_db: name={{ dbname }} owner={{ dbuser }}
 
 # - name: PostgreSQL database grants
 #   sudo_user: postgres

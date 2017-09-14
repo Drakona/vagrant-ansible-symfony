@@ -8,8 +8,8 @@
     # used for http basic auth and oauth2 bearer token
     SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
 
-    SetEnv SYMFONY__DATABASE__USER {{ DBUSER }}
-    SetEnv SYMFONY__DATABASE__PASSWORD {{ DBPASSWORD }}
+    SetEnv SYMFONY__DATABASE__USER {{ dbuser }}
+    SetEnv SYMFONY__DATABASE__PASSWORD {{ dbpassword }}
 
     DocumentRoot {{ APPWEBROOT }}
     <Directory {{ APPWEBROOT }}>

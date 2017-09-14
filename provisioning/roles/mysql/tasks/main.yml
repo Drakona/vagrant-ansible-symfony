@@ -3,7 +3,7 @@
   apt: name=mysql-server,python-mysqldb
 
 - name: MySQL database init
-  mysql_db: name={{ DBNAME }}
+  mysql_db: name={{ dbname }}
 
 - name: MySQL database user
-  mysql_user: name={{ DBUSER }} password={{ DBPASSWORD }} priv={{ DBNAME }}.*:ALL
+  mysql_user: name={{ dbuser }} password={{ dbpassword }} priv={{ dbname }}.*:ALL

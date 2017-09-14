@@ -15,14 +15,14 @@
     regexp="{{ item.key }}:.+$"
     replace='{{ item.key }}: {{ item.value }}'
   with_items:
-    - {key: database_user, value: "{{ DBUSER }}" }
-    - {key: database_password, value: "{{ DBPASSWORD }}"}
+    - {key: database_user, value: "{{ dbuser }}" }
+    - {key: database_password, value: "{{ dbpassword }}"}
 
 - name: update config.yml with correct DB adapter
   replace: >
     dest={{ APPDIR }}/app/config/config.yml
     regexp="(driver:\s+)pdo_.+$"
-    replace='\1{{ db_drivers[DBTYPE] }}'
+    replace='\1{{ db_drivers[dbtype] }}'
 
 - name: allow vagrant host to access dev frontend controller
   replace: dest={{ APPWEBROOT }}/app_dev.php

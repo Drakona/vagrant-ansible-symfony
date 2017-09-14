@@ -14,7 +14,7 @@ Note: if you already have a service using the port 8080, or if you have already 
 The virtual machine will be automatically prepared ("provisioned", through [Ansible](http://docs.ansible.com/) "playbooks") in accordance with the "roles" defined in the `provisioning` directory:
 
 0. "apache", "php", "git", etc. installs and configures these system services.
-0. "postgresql" OR "mysql" (depending on the `DBTYPE` variable declared in the `Vagrantfile`) creates the database server and credentials
+0. "postgresql" OR "mysql" (depending on the `dbtype` variable declared in the `Vagrantfile`) creates the database server and credentials
 0. "symfony" downloads the basic tools required to work with Symfony (-its installer) and PHP (-Composer, for dependency management).
 0. If APPNAME is set in the Vagrantfile, then "webapp" initializes a shiny new application in an eponymous directory. Also if APPNAME is set, "webapp-container" prepares the frontend web server (-a VirtualHost entry) and backend processes (-a FastCGI process group) for your application.
 0. Finally, "vagrantbox" just applies a few additional system-level optimizations to the virtual server.
