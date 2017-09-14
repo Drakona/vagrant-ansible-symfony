@@ -31,7 +31,7 @@ Vagrant.configure(2) do |config|
       ansible.verbose = verbosity_arg
     end
   else
-    config.vm.synced_folder "./", "/vagrant", type: "smb", mount_options: ['ip=192.168.50.1'] #host side of :private_network
+    config.vm.synced_folder "./", "/vagrant", type: "smb"
     extra_vars_arg = '{' + app_vars.map{|k,v| '"' + k.to_s + '":"' + v.to_s + '"'}.join(',') + '}'
 
     config.vm.provision :shell, :inline => <<-END
@@ -50,6 +50,5 @@ END
   end
 
   config.vm.network "forwarded_port", guest: 80, host: 8080
-  config.vm.network "private_network", ip: "192.168.50.4"
 
 end

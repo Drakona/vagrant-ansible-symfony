@@ -1,6 +1,6 @@
 ---
 - name: PostgreSQL server and client
-  apt: name=postgresql-9.3,libpq-dev,python-psycopg2
+  apt: name=postgresql-9.6,libpq-dev,python-psycopg2
 
 - name: PostgreSQL database user
   sudo_user: postgres
