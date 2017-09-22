@@ -1,13 +1,19 @@
 ---
+- name: Check if a src folder is already present
+  stat: path="{{ APPDIR }}/src"
+  register: installdir
+
 - name: initialize application
-  sudo_user: vagrant
+  become_user: vagrant
   # include: init_app_via_composer.yml
   include: init_app_via_installer.yml
+  when: not installdir.stat.exists
 
 - name: create parameters.yml based on parameters.yml.dist
-  sudo_user: vagrant
+  become_user: vagrant
   command: creates={{ APPDIR }}/app/config/parameters.yml
     cp {{ APPDIR }}/app/config/parameters.yml.dist {{ APPDIR }}/app/config/parameters.yml
+  when: not installdir.stat.exists
 
 - name: update parameters.yml database user
   replace: > # see https://github.com/ansible/ansible/issues/2769
@@ -17,6 +23,7 @@
   with_items:
     - {key: database_user, value: "{{ dbuser }}" }
     - {key: database_password, value: "{{ dbpassword }}"}
+  when: not installdir.stat.exists
 
 - name: update config.yml with correct DB adapter
   replace: >
@@ -28,11 +35,14 @@
   replace: dest={{ APPWEBROOT }}/app_dev.php
     regexp="array\('127.0.0.1'"
     replace="array('10.0.2.2', '127.0.0.1'"
+  when: not installdir.stat.exists
 
 - name: default gitignore
   copy: src=Symfony.gitignore dest={{ APPDIR }}/.gitignore force=no
+  when: not installdir.stat.exists
 
 - name: install app dependencies (composer install)
-  sudo_user: vagrant
+  become_user: vagrant
   command: creates={{ APPDIR }}/vendor/ chdir={{ APPDIR }}
     composer install --quiet --no-ansi --no-interaction
+  when: not installdir.stat.exists

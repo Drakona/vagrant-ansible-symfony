@@ -1,22 +1,64 @@
 ---
 - name: (purge HHVM)
   apt: name=hhvm state=absent
-  
+
+- name: Add apt signing key
+  apt_key:
+    url: https://www.dotdeb.org/dotdeb.gpg
+    state: present
+
 - name: add repository
-  apt_repository: repo='ppa:ondrej/php'
+  apt_repository:
+    update_cache: true
+    repo: deb http://packages.dotdeb.org jessie all
+    state: present
 
 - name: PHP 7.x and extensions
   apt: name={{ item }}
   with_items:
+    # Symfony
+    - curl
+    - libapache2-mod-fastcgi
+    - php7.0
     - php7.0-cli
+    - php7.0-intl
     - php7.0-curl
     - php7.0-fpm
-    - php7.0-pgsql
+    - php7.0-mbstring
+    # Composer
+    - php7.0-zip
+    # App
+    - php7.0-gd
+    - php7.0-xml
+    - php7.0-xsl
+    - php7.0-imagick
     - php7.0-mysql
-    - php7.0-dev
-    - php7.0-intl
+    - php7.0-pgsql
+    - php7.0-imap
+    - php7.0-mcrypt
+    - php7.0-tidy
+    - php7.0-xmlrpc
+    - php7.0-opcache
+    - php-pear
   notify:
     restart Apache
+
+- name: Activate apache mods
+  apache2_module: name={{ item }} state=present
+  with_items:
+    - actions
+    - fastcgi
+    - alias
+    - proxy_fcgi
+    - suexec
+    - rewrite
+    - ssl
+    - include
+
+- name: Deactivate apache mods
+  apache2_module: name={{ item }} state=absent
+  with_items:
+    - php7.0
 
 - name: copy php.ini customizations
   copy: src=php-extra.ini dest=/etc/php/7.0/mods-available/extra.ini

@@ -1,15 +1,26 @@
 ---
+# - name: Add apt signing key
+#   apt_key:
+#     url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+#     state: present
+
+# - name: add repository
+#   apt_repository:
+#     update_cache: true
+#     repo: deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main
+#     state: present
+
 - name: PostgreSQL server and client
-  apt: name=postgresql-9.6,libpq-dev,python-psycopg2
+  apt: name=postgresql,libpq-dev,python-psycopg2
 
 - name: PostgreSQL database user
-  sudo_user: postgres
+  become_user: postgres
   postgresql_user: name={{ dbuser }} password={{ dbpassword }}
 
 - name: PostgreSQL database init
-  sudo_user: postgres
+  become_user: postgres
   postgresql_db: name={{ dbname }} owner={{ dbuser }}
 
 # - name: PostgreSQL database grants
-#   sudo_user: postgres
+#   become_user: postgres
 #   postgresql_privs: db=symfony role=vagrant objs=ALL_IN_SCHEMA priv=ALL

@@ -1,17 +1,21 @@
 ---
 - hosts: all
-  sudo: yes
+  become: yes
   vars:
-    APPDIR: "/vagrant/{{ APPNAME }}"
-    when: APPNAME is defined
+    APPDIR: "/vagrant"
     APPWEBROOT: "{{ APPDIR }}/web"
-    when: APPNAME is defined
-    APPCOMMONDIR: "/vagrant"
+    APPCOMMONDIR: "/opt"
     APPUSER: "vagrant"
 
   pre_tasks:
     - name: check last APT update time
       apt: update_cache=yes cache_valid_time=86400
+
+    - name: add non free repositories
+      apt_repository: repo={{ item }} state=present
+      with_items:
+        - deb http://ftp.us.debian.org/debian/ jessie main contrib non-free
+        - deb http://security.debian.org/ jessie/updates main contrib non-free
 
   roles:
     - apache
@@ -20,6 +24,6 @@
     - php
     - git
     - symfony
-    - { role: webapp, when: APPNAME is defined }
-    - { role: webapp-container, when: APPNAME is defined }
+    - webapp
+    - webapp-container
     - vagrantbox

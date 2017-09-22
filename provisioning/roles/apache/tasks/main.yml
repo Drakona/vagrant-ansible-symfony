@@ -2,8 +2,5 @@
 - name: APT install package
   apt: name=apache2
 
-- name: enable FastCGI module
-  apache2_module: name=proxy_fcgi
-
-- name: enable Rewrite module
-  apache2_module: name=rewrite
+- name: Ensure fastcgi folder is writable
+  file: path="/var/lib/apache2/fastcgi" state=directory mode=0777
