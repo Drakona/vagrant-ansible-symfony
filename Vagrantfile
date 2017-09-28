@@ -57,9 +57,6 @@ Vagrant.configure(2) do |config|
 
   verbosity_arg = if defined? ansible_verbosity then ansible_verbosity else '' end
   if host_box_is_unixy?
-    config.vm.synced_folder "./", "/vagrant" + app[:appname],
-      type: "nfs",
-      mount_options: ['nolock', 'actimeo=1', 'fsc']
     config.vm.provision :ansible do |ansible|
       ansible.playbook = 'provisioning/site.yml'
       ansible.extra_vars = app

@@ -1,9 +1,8 @@
 <VirtualHost *:80>
+    DocumentRoot {{ APPWEBROOT }}
+
     ServerName Symfony
     ServerAlias Symfony
-
-    ErrorLog /var/log/apache2/project_error.log
-    CustomLog /var/log/apache2/project_access.log combined
 
     # used for http basic auth and oauth2 bearer token
     SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
@@ -11,27 +10,15 @@
     SetEnv SYMFONY__DATABASE__USER {{ dbuser }}
     SetEnv SYMFONY__DATABASE__PASSWORD {{ dbpassword }}
 
-    DocumentRoot {{ APPWEBROOT }}
     <Directory {{ APPWEBROOT }}>
         AllowOverride all
         Require all granted
         DirectoryIndex app.php
-
-        <IfModule mod_rewrite.c>
-            RewriteEngine On
-
-            # The main phpfpm call is added at the end to pass php requests through to FPM
-            RewriteRule ^(.*\.php(/.*)?)$ fcgi://127.0.0.1:9000/%{REQUEST_FILENAME} [P,END]
-        </IfModule>
-        ## End directives copied from standard Sf .htaccess
     </Directory>
     <Directory /usr/lib/cgi-bin>
-            Require all granted
+        Require all granted
     </Directory>
-    <IfModule mod_fastcgi.c>
-            SetHandler php7-fcgi .php
-            Action php7-fcgi /php7-fcgi virtual
-            Alias /php7-fcgi /usr/lib/cgi-bin/php7-fcgi
-            FastCgiExternalServer /usr/lib/cgi-bin/php7-fcgi -socket /var/run/php/php7.0-fpm.sock -pass-header Authorization
-    </IfModule>
+
+    ErrorLog /var/log/apache2/{{ appname }}.error.log
+    CustomLog /var/log/apache2/{{ appname }}.access.log combined
 </VirtualHost>

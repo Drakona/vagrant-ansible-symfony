@@ -18,12 +18,10 @@
   with_items:
     # Symfony
     - curl
-    - libapache2-mod-fastcgi
     - php7.0
     - php7.0-cli
     - php7.0-intl
     - php7.0-curl
-    - php7.0-fpm
     - php7.0-mbstring
     # Composer
     - php7.0-zip
@@ -47,22 +45,15 @@
   apache2_module: name={{ item }} state=present
   with_items:
     - actions
-    - fastcgi
     - alias
-    - proxy_fcgi
     - suexec
     - rewrite
     - ssl
     - include
 
-- name: Deactivate apache mods
-  apache2_module: name={{ item }} state=absent
-  with_items:
-    - php7.0
-
 - name: copy php.ini customizations
   copy: src=php-extra.ini dest=/etc/php/7.0/mods-available/extra.ini
   notify:
-    - restart PHP70-FPM
+    - restart Apache
 
 
